@@ -98,7 +98,7 @@
     <repository>
       <id>github</id>
       <name>GitHub Pagman1006 Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/pagman1006/dummy-objects</url>
+      <url>https://maven.pkg.github.com/pagman1006/generate-dummy-plugin</url>
     </repository>
   </distributionManagement>
 </project>
