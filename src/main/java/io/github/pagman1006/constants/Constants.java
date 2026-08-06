@@ -4,7 +4,7 @@ public class Constants {
 
     public static final String MOJO_NAME = "generate";
     public static final String PACKAGE_PROPERTY = "packageBase";
-    public static final String DEFAULT_PACKAGE = "com.bbva.mzic";
+    public static final String DEFAULT_PACKAGE = "io.github.pagman1006";
     public static final String PATH_TEST_JAVA = "src/test/java/";
     public static final String PACKAGE_UTIL = ".util";
     public static final String DIR_UTIL = "util/";
