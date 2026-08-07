@@ -2,7 +2,6 @@ package io.github.pagman1006;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -26,14 +25,14 @@ public class GenerateMojo extends AbstractMojo {
     private String packageBase;
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoExecutionException {
         final File baseDir = project.getBasedir();
         final String packagePath = packageBase.replace(DOT, File.separatorChar);
         final File testJavaDir = new File(baseDir, PATH_TEST_JAVA.concat(packagePath));
 
         getLog().info(LOG_GENERATING_CLASSES.concat(testJavaDir.getAbsolutePath()));
         if (!testJavaDir.exists()) {
-            if (!testJavaDir.mkdir()) {
+            if (!testJavaDir.mkdirs()) {
                 throw new MojoExecutionException(
                         LOG_FAILED_CREATE_TEST_DIRECTORY.concat(testJavaDir.getAbsolutePath()));
             }
