@@ -21,6 +21,50 @@ public class Utils {
         return createFile(log, testJavaDir, packageBase, CONSTANTS_CLASS, CONSTANTS_FILE, LOG_CREATED_CONSTANTS);
     }
 
+    private static boolean createFile(Log log, File testJavaDir, String packageBase, String constantsClass,
+            String constantsFile, String logCreatedConstants) {
+        final String packagePath = packageBase.concat(PACKAGE_UTIL).replace(File.separatorChar, DOT);
+        final File baseDir = new File(testJavaDir, DIR_UTIL);
+        final File testFile = new File(baseDir, constantsClass);
+
+        if (!baseDir.exists() && !baseDir.mkdirs()) {
+            log.error(LOG_FAILED_CREATE_DIRECTORY.concat(baseDir.getAbsolutePath()));
+        }
+
+        final StringBuilder content = new StringBuilder();
+        content.append(PACKAGE).append(packagePath).append(SEMICOLON).append(DELIMITER).append(DELIMITER)
+                .append(readFile(constantsFile));
+
+        return writeFile(testFile, content, log, logCreatedConstants, baseDir);
+    }
+
+    private static String readFile(final String resource) {
+        final StringBuilder content = new StringBuilder();
+        try (InputStream in = Utils.class.getClassLoader().getResourceAsStream(resource)) {
+            if (in != null) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+                    content.append(reader.lines().collect(Collectors.joining(DELIMITER)));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println(LOG_ERROR_READER_FILE.concat(e.getMessage()));
+        }
+        return content.toString();
+    }
+
+    private static boolean writeFile(File testFile, StringBuilder content, Log log, String logCreatedFile,
+            File baseDir) {
+        try (FileWriter writer = new FileWriter(testFile)) {
+            writer.write(content.toString());
+            log.info(logCreatedFile.concat(testFile.getAbsolutePath()));
+        } catch (Exception e) {
+            log.error(
+                    LOG_ERROR_WRITING_FILE.concat(baseDir.getAbsolutePath().concat(DELIMITER).concat(e.getMessage())));
+            return false;
+        }
+        return true;
+    }
+
     public static boolean createUtilsClass(final Log log, final File testJavaDir, final String packageBase) {
         return createFile(log, testJavaDir, packageBase, Constants.UTILS_CLASS, Constants.UTILS_FILE,
                 ConstantsLog.LOG_CREATED_UTILS);
@@ -40,49 +84,6 @@ public class Utils {
                 .append(IMPORT_STATIC).append(packageName).append(IMPORT_UTILS).append(SEMICOLON).append(DELIMITER)
                 .append(DELIMITER).append(readFile(FACTORY_FILE));
 
-        writeFile(testFile, content, log, LOG_CREATED_FACTORY, baseDir);
-        return true;
-    }
-
-    private static boolean createFile(Log log, File testJavaDir, String packageBase, String constantsClass,
-            String constantsFile, String logCreatedConstants) {
-        final String packagePath = packageBase.concat(PACKAGE_UTIL).replace(File.separatorChar, DOT);
-        final File baseDir = new File(testJavaDir, DIR_UTIL);
-        final File testFile = new File(baseDir, constantsClass);
-
-        if (!baseDir.exists() && !baseDir.mkdirs()) {
-            log.error(LOG_FAILED_CREATE_DIRECTORY.concat(baseDir.getAbsolutePath()));
-        }
-
-        final StringBuilder content = new StringBuilder();
-        content.append(PACKAGE).append(packagePath).append(SEMICOLON).append(DELIMITER).append(DELIMITER)
-                .append(readFile(constantsFile));
-
-        writeFile(testFile, content, log, logCreatedConstants, baseDir);
-        return true;
-    }
-
-    private static String readFile(final String resource) {
-        final StringBuilder content = new StringBuilder();
-        try (InputStream in = Utils.class.getClassLoader().getResourceAsStream(resource);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-            content.append(reader.lines().collect(Collectors.joining(DELIMITER)));
-        } catch (Exception e) {
-            System.err.println(LOG_ERROR_READER_FILE.concat(e.getMessage()));
-            e.printStackTrace();
-        }
-        return content.toString();
-    }
-
-    private static void writeFile(File testFile, StringBuilder content, Log log, String logCreatedFile,
-            File baseDir) {
-        try (FileWriter writer = new FileWriter(testFile)) {
-            writer.write(content.toString());
-            log.info(logCreatedFile.concat(testFile.getAbsolutePath()));
-        } catch (Exception e) {
-            log.error(
-                    LOG_ERROR_WRITING_FILE.concat(baseDir.getAbsolutePath().concat(DELIMITER).concat(e.getMessage())));
-            e.printStackTrace();
-        }
+        return writeFile(testFile, content, log, LOG_CREATED_FACTORY, baseDir);
     }
 }
