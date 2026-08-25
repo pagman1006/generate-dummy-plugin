@@ -15,15 +15,31 @@ import static io.github.pagman1006.util.Utils.createConstantsClass;
 import static io.github.pagman1006.util.Utils.createFactoryClass;
 import static io.github.pagman1006.util.Utils.createUtilsClass;
 
+/**
+ * Mojo goal that generates test helper utility classes (Constants, Utils, Factory)
+ * into the test source directory of the target project.
+ */
 @Mojo(name = MOJO_NAME, defaultPhase = LifecyclePhase.COMPILE)
 public class GenerateMojo extends AbstractMojo {
 
+    /**
+     * The Maven project instance.
+     */
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     MavenProject project;
 
+    /**
+     * The base package under which the test utility classes will be generated.
+     */
     @Parameter(property = PACKAGE_PROPERTY, defaultValue = DEFAULT_PACKAGE)
     private String packageBase;
 
+    /**
+     * Executes the Mojo to create the target test directories and generate
+     * the Constants, Utils, and Factory Java source files.
+     *
+     * @throws MojoExecutionException if directory creation or file generation fails
+     */
     @Override
     public void execute() throws MojoExecutionException {
         final File baseDir = project.getBasedir();

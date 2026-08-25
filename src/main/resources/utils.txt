@@ -1,12 +1,33 @@
 import java.lang.reflect.Field;
 import java.util.Random;
 
+/**
+ * Utility class providing methods for generating random values.
+ * <p>
+ * This class wraps {@link java.util.Random} to provide easy access to random
+ * strings, numbers (integers, longs, floats, doubles), booleans, and enum values.
+ * It is primarily used by the {@link Factory} to populate dummy objects.
+ * </p>
+ */
 public class Utils {
 
-    private Utils() {  }
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private Utils() {}
 
+    /**
+     * The random number generator used for generating random values.
+     */
     private static final Random random = new Random();
 
+    /**
+     * Generates a random string of the specified length.
+     *
+     * @param length       The length of the string to generate.
+     * @param characterSet The string containing the set of characters to choose from.
+     * @return A random string constructed from characters in {@code characterSet}.
+     */
     public static String randomString(final int length, final String characterSet) {
         final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
@@ -16,22 +37,57 @@ public class Utils {
         return sb.toString();
     }
 
+    /**
+     * Generates a random long value within the specified range.
+     *
+     * @param min The minimum value (inclusive).
+     * @param max The maximum value (exclusive).
+     * @return A random long between {@code min} and {@code max}.
+     */
     public static long randomNumber(final long min, final long max) {
         return random.nextLong(min, max);
     }
 
+    /**
+     * Generates a random float value within the specified range.
+     *
+     * @param min The minimum value (inclusive).
+     * @param max The maximum value (exclusive).
+     * @return A random float between {@code min} and {@code max}.
+     */
     public static float randomNumber(final float min, final float max) {
         return random.nextFloat(min, max);
     }
 
+    /**
+     * Generates a random double value within the specified range.
+     *
+     * @param min The minimum value (inclusive).
+     * @param max The maximum value (exclusive).
+     * @return A random double between {@code min} and {@code max}.
+     */
     public static double randomNumber(final double min, final double max) {
         return random.nextDouble(min, max);
     }
 
+    /**
+     * Generates a random boolean value.
+     *
+     * @return {@code true} or {@code false} randomly.
+     */
     public static boolean randomBoolean() {
         return random.nextBoolean();
     }
 
+    /**
+     * Selects a random enum constant for the type of the provided field.
+     *
+     * @param field The field representing an Enum type.
+     * @param <E>   The Enum type.
+     * @return A random constant from the enum defined by the field's type.
+     * @throws ClassNotFoundException If the class of the field type cannot be located.
+     * @throws ClassCastException     If the field type is not an Enum.
+     */
     @SuppressWarnings("unchecked")
     public static <E extends Enum<E>> E randomEnum(final Field field)
             throws ClassNotFoundException, ClassCastException {
@@ -39,13 +95,17 @@ public class Utils {
         if (enums == null) {
             throw new ClassCastException("Field type is not an enum.");
         }
-        if (enums.length == 0) {
-            return null;
-        }
         int rand = randomNumber(0, enums.length);
         return enums[rand];
     }
 
+    /**
+     * Generates a random integer value within the specified range.
+     *
+     * @param min The minimum value (inclusive).
+     * @param max The maximum value (exclusive).
+     * @return A random int between {@code min} and {@code max}.
+     */
     public static int randomNumber(final int min, final int max) {
         return random.nextInt(min, max);
     }
